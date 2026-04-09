@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SearchBar from '../components/SearchBar';
+import { tools, categories } from '../data/tools';
+
+const featuredTools = tools.filter(t => t.highlight);
+const stats = {
+  total: tools.length,
+  free: tools.filter(t => t.pricing === 'free' || t.pricing === 'open-source').length,
+  categories: categories.length,
+};
+---
+<BaseLayout>
+  <Header />
+
+  <!-- Hero 区域 -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-[#0f1117] dark:to-gray-900 pt-16 pb-20">
+    <!-- 背景装饰 -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50"></div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-100 dark:bg-purple-900/20 rounded-full blur-3xl opacity-50"></div>
+    </div>
+
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- 标题 -->
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-sm font-medium mb-6">
+          <span>🎉</span> 免费 · 开源 · 无限可能
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white mb-4 leading-tight">
+          发现 <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">免费开源</span><br />
+          替代付费软件的最佳方案
+        </h1>
+        <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          收录 {stats.total} 款优质免费和开源软件，覆盖 AI、开发、设计、效率等 {stats.categories} 个分类
+          <br />告别高昂订阅费，用更少的钱，获得更好的工具
+        </p>
+      </div>
+
+      <!-- 统计卡片 -->
+      <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto mb-14">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center shadow-sm border border-gray-100 dark:border-gray-700">
+          <div class="text-2xl font-black text-blue-600 dark:text-blue-400">{stats.total}</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">收录工具</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center shadow-sm border border-gray-100 dark:border-gray-700">
+          <div class="text-2xl font-black text-green-600 dark:text-green-400">{stats.free}</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">免费/开源</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center shadow-sm border border-gray-100 dark:border-gray-700">
+          <div class="text-2xl font-black text-purple-600 dark:text-purple-400">{stats.categories}</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">分类</div>
+        </div>
+      </div>
+
+      <!-- 搜索框（React Island）-->
+      <SearchBar tools={tools} client:load />
+    </div>
+  </section>
+
+  <!-- 精选推荐 -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">⭐ 精选推荐</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">每个分类最受欢迎的工具，值得优先尝试</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {featuredTools.map(tool => {
+        const cat = categories.find(c => c.id === tool.category);
+        return (
+          <a
+            href={tool.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group block bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-700 transition-all hover:-translate-y-0.5"
+          >
+            <div class="flex items-start gap-3 mb-3">
+              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-700 flex items-center justify-center text-2xl flex-shrink-0 shadow-sm">
+                {cat?.icon}
+              </div>
+              <div>
+                <div class="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{tool.name}</div>
+                <div class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                  {cat?.icon} {cat?.name}
+                </div>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">{tool.description}</p>
+            <div class="flex items-center gap-2 mt-3">
+              <span class="text-xs px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 font-medium">
+                {tool.pricing === 'open-source' ? '开源' : '免费'}
+              </span>
+              <span class="text-xs text-gray-400 dark:text-gray-500">→ 访问</span>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- 全部分类概览 -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">📂 全部分类</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      {categories.map(cat => {
+        const catTools = tools.filter(t => t.category === cat.id);
+        return (
+          <a
+            href={`/?cat=${cat.id}`}
+            class="group bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-700 transition-all hover:-translate-y-0.5"
+          >
+            <div class="text-2xl mb-2">{cat.icon}</div>
+            <div class="font-bold text-sm text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{cat.name}</div>
+            <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+              {catTools.length} 款 · {cat.description.split('、')[0]}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- SEO 内容 -->
+  <section class="hidden">
+    <h1>免费开源软件导航 - FreeOpen</h1>
+    <p>免费开源软件导航，收录 ChatGPT、Claude、DeepSeek、Stable Diffusion、VS Code、Figma 等优质免费工具。</p>
+  </section>
+
+  <Footer />
+</BaseLayout>

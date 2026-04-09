@@ -1,0 +1,198 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ToolCard from '../../components/ToolCard';
+import { tools, categories, getRelated } from '../../data/tools';
+
+export function getStaticPaths() {
+  return tools.map(tool => ({
+    params: { id: tool.id },
+    props: { tool },
+  }));
+}
+
+const { tool } = Astro.props;
+const cat = categories.find(c => c.id === tool.category);
+const related = getRelated(tool.id, 4);
+---
+
+<BaseLayout
+  title={`${tool.name} — FreeOpen 免费开源软件导航`}
+  description={tool.description}
+>
+  <Header />
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+    <!-- 面包屑 -->
+    <div class="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 mb-8">
+      <a href="/" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">首页</a>
+      <span>/</span>
+      <span>{cat?.icon} {cat?.name}</span>
+      <span>/</span>
+      <span class="text-gray-600 dark:text-gray-300">{tool.name}</span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- 左侧：工具信息 -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- 主卡片 -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm">
+          <div class={`h-1.5 w-full ${tool.highlight ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-gray-100 dark:bg-gray-700'}`} />
+          <div class="p-8">
+            <div class="flex items-start gap-4 mb-6">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-700 flex items-center justify-center text-3xl shadow-sm flex-shrink-0">
+                {cat?.icon}
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 flex-wrap mb-2">
+                  <h1 class="text-2xl font-black text-gray-900 dark:text-white">{tool.name}</h1>
+                  {tool.highlight && (
+                    <span class="px-2 py-0.5 text-xs font-bold rounded bg-gradient-to-r from-blue-500 to-purple-500 text-white">⭐ 推荐</span>
+                  )}
+                </div>
+                <div class="flex items-center gap-2 flex-wrap text-sm">
+                  <span class={`px-2.5 py-1 rounded-full font-medium text-xs ${
+                    tool.pricing === 'free' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400' :
+                    tool.pricing === 'open-source' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400' :
+                    tool.pricing === 'freemium' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400' :
+                    'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400'
+                  }`}>
+                    {tool.pricing === 'open-source' ? '🟣 开源' : tool.pricing === 'free' ? '🟢 免费' : tool.pricing === 'freemium' ? '🔵 Freemium' : '🟠 付费'}
+                  </span>
+                  <span class="text-gray-400 dark:text-gray-500">·</span>
+                  <span class="text-gray-500 dark:text-gray-400">{cat?.icon} {cat?.name}</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-base mb-6">
+              {tool.description}
+            </p>
+
+            <div class="flex flex-wrap gap-3">
+              <a
+                href={tool.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md hover:shadow-lg transition-all"
+              >
+                🌐 访问官网 →
+              </a>
+              <button
+                id="copy-btn"
+                data-url={tool.url}
+                class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium transition-colors"
+              >
+                📋 复制链接
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 详细信息 -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">📋 详情信息</h2>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3">
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400 w-20 flex-shrink-0 pt-0.5">英文名</span>
+              <span class="text-sm text-gray-900 dark:text-gray-200">{tool.nameEn}</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400 w-20 flex-shrink-0 pt-0.5">官网</span>
+              <a href={tool.url} target="_blank" class="text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">{tool.url}</a>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400 w-20 flex-shrink-0 pt-0.5">分类</span>
+              <span class="text-sm text-gray-900 dark:text-gray-200">{cat?.icon} {cat?.name}</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400 w-20 flex-shrink-0 pt-0.5">价格</span>
+              <span class="text-sm text-gray-900 dark:text-gray-200">
+                {tool.pricing === 'free' ? '完全免费' :
+                 tool.pricing === 'open-source' ? '开源免费（可自托管）' :
+                 tool.pricing === 'freemium' ? '基础免费 + 高级付费' : '付费订阅'}
+              </span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400 w-20 flex-shrink-0 pt-0.5">平台</span>
+              <div class="flex flex-wrap gap-2">
+                {tool.platform.map(p => (
+                  <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{p}</span>
+                ))}
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400 w-20 flex-shrink-0 pt-0.5">标签</span>
+              <div class="flex flex-wrap gap-1.5">
+                {tool.tags.map(tag => (
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-100 dark:border-gray-600">{tag}</span>
+                ))}
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-sm font-medium text-gray-500 dark:text-gray-400 w-20 flex-shrink-0 pt-0.5">收录时间</span>
+              <span class="text-sm text-gray-900 dark:text-gray-200">{tool.addedAt}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 替代品推荐 -->
+        {related.length > 0 && (
+          <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">🔄 你可能还喜欢</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {related.map(t => (
+                <ToolCard tool={t} compact={true} client:visible />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- 右侧：侧边栏 -->
+      <div class="space-y-6">
+        <!-- SEO 摘要 -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm">
+          <h3 class="font-bold text-gray-900 dark:text-white mb-3">💡 关于 {tool.name}</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            {tool.name} 是 {cat?.description} 领域的优秀工具，
+            {tool.pricing === 'free' || tool.pricing === 'open-source' ? '完全免费或开源免费，无需付费即可使用全部功能' : '提供免费额度，付费可解锁高级功能'}，
+            支持 {tool.platform.join('、')} 平台。
+          </p>
+        </div>
+
+        <!-- 分类列表 -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm">
+          <h3 class="font-bold text-gray-900 dark:text-white mb-3">📂 {cat?.name} 分类</h3>
+          <ul class="space-y-2">
+            {categories.filter(c => c.id === tool.category).map(c => (
+              <li class="text-sm">
+                <span class="text-gray-500 dark:text-gray-400">{c.icon} {c.name}：</span>
+                <span class="text-gray-700 dark:text-gray-300">{c.description}</span>
+              </li>
+            ))}
+          </ul>
+          <a href={`/?cat=${tool.category}`} class="mt-3 inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline">
+            查看全部 → 
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  const btn = document.getElementById('copy-btn');
+  const url = btn?.getAttribute('data-url');
+  if (btn && url) {
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(url).then(() => {
+        btn.textContent = '✅ 已复制!';
+        setTimeout(() => { btn.textContent = '📋 复制链接'; }, 2000);
+      });
+    });
+  }
+</script>

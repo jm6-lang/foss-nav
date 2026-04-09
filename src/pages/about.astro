@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { tools, categories } from '../data/tools';
+---
+<BaseLayout title="关于 FreeOpen — 免费开源软件导航" description="了解 FreeOpen 的理念和收录标准。">
+  <Header />
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-3xl font-black text-gray-900 dark:text-white mb-3">关于 FreeOpen</h1>
+      <p class="text-gray-500 dark:text-gray-400">了解我们的理念、收录标准和联系方式</p>
+    </div>
+
+    <div class="space-y-6">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-8 shadow-sm">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">🎯 我们的理念</h2>
+        <div class="space-y-3 text-gray-600 dark:text-gray-300 leading-relaxed">
+          <p>软件订阅费越来越贵——Adobe 全家桶每月 $60，Notion 每月 $16，ChatGPT Plus 每月 $20。一个人的工具订阅费，轻轻松松超过 $100/月。</p>
+          <p><strong class="text-gray-900 dark:text-white">FreeOpen</strong> 收录全球优质免费和开源软件，帮助每个人用零成本获得同样（甚至更好）的工具体验。</p>
+          <p>我们相信：好工具不应该只有付得起钱的人才能用。</p>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-8 shadow-sm">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">📋 收录标准</h2>
+        <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+          <li class="flex items-start gap-3">
+            <span class="text-green-500 mt-0.5">✅</span>
+            <span>必须完全免费或有充足免费额度，不能是"免费试用"后强制付费</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-green-500 mt-0.5">✅</span>
+            <span>开源软件优先（SLoSaaS），支持自托管，数据自主</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-green-500 mt-0.5">✅</span>
+            <span>需要真实使用体验，不能是空壳项目或停更超过 1 年</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-green-500 mt-0.5">✅</span>
+            <span>不收录需要科学上网才能访问的工具（国内可直接访问）</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-green-500 mt-0.5">✅</span>
+            <span>优先收录有中文界面或中文文档的工具</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-8 shadow-sm">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">📊 数据统计</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-center">
+            <div class="text-2xl font-black text-blue-600 dark:text-blue-400">{tools.length}</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">收录工具</div>
+          </div>
+          <div class="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 text-center">
+            <div class="text-2xl font-black text-green-600 dark:text-green-400">{tools.filter(t => t.pricing === 'free' || t.pricing === 'open-source').length}</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">免费/开源</div>
+          </div>
+          <div class="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 text-center">
+            <div class="text-2xl font-black text-purple-600 dark:text-purple-400">{categories.length}</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">分类</div>
+          </div>
+          <div class="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 text-center">
+            <div class="text-2xl font-black text-orange-600 dark:text-orange-400">{categories.length * 3}+</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">收录品牌</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-8 shadow-sm">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">🤝 参与贡献</h2>
+        <div class="space-y-3 text-gray-600 dark:text-gray-300">
+          <p>发现了好工具但我们没有收录？欢迎提交！</p>
+          <div class="flex gap-3 flex-wrap">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold text-sm hover:opacity-90 transition-opacity">
+              🐙 在 GitHub 提交 Issue
+            </a>
+            <a href="mailto:contact@freeopen.example"
+               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-medium text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              📧 邮件联系
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

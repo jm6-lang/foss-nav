@@ -1,0 +1,63 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = 'FreeOpen — 免费开源软件导航',
+  description = '收录全球优质免费和开源软件，按分类导航，无需注册即可使用。告别付费软件，发现更好的替代品。',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#2563eb" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <!-- TailwindCSS CDN (for rapid prototyping, replace with build in production) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"PingFang SC"', '"Microsoft YaHei"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html { scroll-behavior: smooth; }
+      body { font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; }
+      /* 卡片悬停效果 */
+      .group:hover .card-glow { opacity: 1; }
+      /* 滚动条美化 */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      /* 行数截断 */
+      .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      /* 暗色模式滚动条 */
+      .dark ::-webkit-scrollbar-thumb { background: #475569; }
+      .dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+  </head>
+  <body class="bg-gray-50 dark:bg-[#0f1117] text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200">
+    <slot />
+  </body>
+</html>
